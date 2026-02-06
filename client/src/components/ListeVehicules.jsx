@@ -117,7 +117,11 @@ const ListeVehicules = () => {
                 <td>{vehicle.marque}</td>
                 <td>{vehicle.modele}</td>
                 <td>{vehicle.annee}</td>
-                <td>{vehicle.client_id ? vehicle.client_id : "—"}</td>
+                <td>
+                    {vehicle.firstname && vehicle.lastname 
+                    ? `${vehicle.lastname} ${vehicle.firstname}` 
+                    : "—"}
+                </td>
                 <td>
                   <button onClick={() => handleEdit(vehicle)}>✏️</button>
                   <button onClick={() => handleDelete(vehicle)}>🗑️</button>
