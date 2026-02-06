@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'HJndezo78ZDBJ',
+  password: 'admin',
   database: 'garage_db'
 });
 
@@ -112,6 +112,8 @@ app.post('/api/signin', (req, res) => {
   });
 });
 
+/* CLIENTS */
+
 app.get('/api/clients/count', (req,_res, next) => {
   req.requiredroles = ["admin"]
   next()
@@ -127,6 +129,98 @@ app.get('/api/clients/count', (req,_res, next) => {
     res.status(200).json(results[0]);
   });
 });
+
+app.get('/api/clients', (req,_res, next) => {
+  req.requiredroles = ["admin"]
+  next()
+},  verifyTokenAndRole, (req, res) => {
+  const sql = 'SELECT * FROM users';
+  db.query(sql, ['client'], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+/* VEHICULES */
+
+app.get('/api/vehicules', (req,_res, next) => {
+  req.requiredroles = ["admin"]
+  next()
+},  verifyTokenAndRole, (req, res) => {
+  const sql = 'SELECT * FROM vehicules';
+  db.query(sql, ['client'], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+      return;
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+app.post('/api/vehicules/create', (req, res) => {
+  const { id, marque, modele, annee, client_id } = req.body;
+  const sql = 'INSERT INTO vehicules (id, marque, modele, annee, client_id) VALUES (?, ?, ?, ?, ?)';
+  db.query(sql, [id, marque, modele, annee, client_id], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+      return;
+    }
+    res.status(201).send('Véhicule crée');
+  });
+});
+
+app.put('/api/vehicules/update/:id', (req, res) => {
+  const vehicleId = req.params.id;
+  const { marque, modele, annee, client_id } = req.body;
+  
+  const sql = 'UPDATE vehicules SET marque = ?, modele = ?, annee = ?, client_id = ? WHERE id = ?';
+  
+  db.query(sql, [marque, modele, annee, client_id, vehicleId], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+      return;
+    }
+    
+    if (result.affectedRows === 0) {
+      res.status(404).send('Véhicule non trouvé');
+      return;
+    }
+    
+    res.status(200).send('Véhicule modifié');
+  });
+});
+
+app.delete('/api/vehicules/delete/:id', (req, res) => {
+  const vehicleId = req.params.id;
+  
+  const sql = 'DELETE FROM vehicules WHERE id = ?';
+  
+  db.query(sql, [vehicleId], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+      return;
+    }
+    
+    if (result.affectedRows === 0) {
+      res.status(404).send('Véhicule non trouvé');
+      return;
+    }
+    
+    res.status(200).send('Véhicule supprimé');
+  });
+});
+
+/* End ROUTER */
 
 app.use(express.static(path.join(__dirname, "./client/dist")))
 app.get("*", (_, res) => {
