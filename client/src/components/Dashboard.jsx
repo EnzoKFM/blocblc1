@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import './AdminDashboard.css';
+import ListeVehicules from './ListeVehicules';
 const baseURI = import.meta.env.VITE_API_BASE_URL;
 
 const AdminDashboard = () => {
@@ -37,6 +38,7 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <h2>Tableau de bord admin</h2>
       <p>Nombre de clients inscrits : {clientCount}</p>
+      <ListeVehicules />
     </div>
   );
 };
