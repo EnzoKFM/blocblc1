@@ -152,7 +152,17 @@ app.get('/api/vehicules', (req,_res, next) => {
   req.requiredroles = ["admin"]
   next()
 },  verifyTokenAndRole, (req, res) => {
-  const sql = 'SELECT * FROM vehicules';
+  const sql = `SELECT 
+      v.id, 
+      v.marque, 
+      v.modele, 
+      v.annee, 
+      v.client_id,
+      c.firstname,
+      c.lastname
+    FROM vehicules v
+    LEFT JOIN users c ON v.client_id = c.id
+  `;
   db.query(sql, ['client'], (err, results) => {
     if (err) {
       console.error(err);

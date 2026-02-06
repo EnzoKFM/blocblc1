@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Modal from './Modal';
+import './VehiculeModal.css';
 const baseURI = import.meta.env.VITE_API_BASE_URL;
 
 const VehiculeModal = ({ isOpen, onClose, vehicleToEdit = null, onSuccess }) => {
@@ -99,7 +100,7 @@ const VehiculeModal = ({ isOpen, onClose, vehicleToEdit = null, onSuccess }) => 
          isOpen={isOpen}
          onClose={onClose}
         >
-            <form className="signup-form" onSubmit={handleSubmit}>
+            <form className="vehicule-modal" onSubmit={handleSubmit}>
                 <h2>{isEditMode ? 'Modification' : 'Création'} d'un véhicule</h2>
                 <input type="number" name="id" placeholder="Plaque d'immatriculation" value={formData.id} onChange={handleChange} disabled={isEditMode} required/>
                 <input type="text" name="marque" placeholder="Marque" value={formData.marque} onChange={handleChange} required />
