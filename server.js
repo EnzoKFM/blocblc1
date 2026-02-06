@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'admin',
+  password: 'HJndezo78ZDBJ',
   database: 'garage_db'
 });
 
@@ -175,6 +175,9 @@ app.get('/api/vehicules', (req,_res, next) => {
 });
 
 app.post('/api/vehicules/create', (req, res) => {
+  req.requiredroles = ["admin"]
+  next()
+},  verifyTokenAndRole, (req, res) => {
   const { id, marque, modele, annee, client_id } = req.body;
   const sql = 'INSERT INTO vehicules (id, marque, modele, annee, client_id) VALUES (?, ?, ?, ?, ?)';
   db.query(sql, [id, marque, modele, annee, client_id], (err, result) => {
@@ -188,6 +191,9 @@ app.post('/api/vehicules/create', (req, res) => {
 });
 
 app.put('/api/vehicules/update/:id', (req, res) => {
+  req.requiredroles = ["admin"]
+  next()
+},  verifyTokenAndRole, (req, res) => {
   const vehicleId = req.params.id;
   const { marque, modele, annee, client_id } = req.body;
   
@@ -210,6 +216,9 @@ app.put('/api/vehicules/update/:id', (req, res) => {
 });
 
 app.delete('/api/vehicules/delete/:id', (req, res) => {
+  req.requiredroles = ["admin"]
+  next()
+},  verifyTokenAndRole, (req, res) => {
   const vehicleId = req.params.id;
   
   const sql = 'DELETE FROM vehicules WHERE id = ?';
